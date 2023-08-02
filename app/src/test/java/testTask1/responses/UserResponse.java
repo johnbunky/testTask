@@ -1,4 +1,4 @@
-package testTask;
+package testTask1.responses;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +9,6 @@ public class UserResponse {
     public String getUserId() {
         return userId;
     }
-
     // Other fields and getters/setters as needed
 }
 
