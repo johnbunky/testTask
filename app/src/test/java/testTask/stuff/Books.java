@@ -1,4 +1,4 @@
-package testTask;
+package testTask.stuff;
 
 public class Books {
     private String isbn;

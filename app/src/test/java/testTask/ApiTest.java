@@ -11,11 +11,16 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import testTask.requests.CollectionRequest;
 import testTask.responses.AuthTokenResponse;
 import testTask.responses.BookListResponse;
+import testTask.responses.CollectionResponse;
 import testTask.responses.UserResponse;
 import testTask.services.BookService;
 import testTask.services.UserService;
+import testTask.stuff.Books;
+import testTask.stuff.Isbn;
+import testTask.stuff.User;
 
 import java.io.IOException;
 import java.util.*;

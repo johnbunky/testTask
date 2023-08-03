@@ -2,7 +2,7 @@ package testTask.services;
 
 import retrofit2.Call;
 import retrofit2.http.*;
-import testTask.User;
+import testTask.stuff.User;
 import testTask.responses.AuthTokenResponse;
 import testTask.responses.UserResponse;
 

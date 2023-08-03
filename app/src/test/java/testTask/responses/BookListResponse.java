@@ -1,8 +1,7 @@
 package testTask.responses;
 
-import testTask.Books;
+import testTask.stuff.Books;
 
-import java.awt.print.Book;
 import java.util.List;
 
 public class BookListResponse {

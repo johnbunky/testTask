@@ -5,8 +5,8 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import testTask.CollectionRequest;
-import testTask.CollectionResponse;
+import testTask.requests.CollectionRequest;
+import testTask.responses.CollectionResponse;
 import testTask.responses.BookListResponse;
 
 public interface BookService {

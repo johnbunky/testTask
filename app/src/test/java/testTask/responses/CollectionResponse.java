@@ -1,4 +1,4 @@
-package testTask;
+package testTask.responses;
 
 import java.util.List;
 
