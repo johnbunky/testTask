@@ -20,4 +20,13 @@ public interface UserService {
             @Header("Content-Type") String contentType,
             @Body User user
     );
+
+    @GET("/Account/v1/User/{userId}")
+    @Headers({
+            "accept: application/json"
+    })
+    Call<UserResponse> retrieveUserDetails(
+            @Header("Content-Type") String contentType,
+            @Path("userId") String userId
+    );
 }
