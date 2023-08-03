@@ -32,6 +32,8 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
 }
 
 application {
@@ -39,6 +41,12 @@ application {
     mainClass = 'testTask.App'
 }
 
+test.outputs.upToDateWhen {false}
+
 test {
     useTestNG()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
