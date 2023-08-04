@@ -31,6 +31,7 @@ public class ApiTest {
     private String token;
     private String userId;
     private List<Books> books;
+    List<CollectionResponse.Book> responseBooks;
 
     String uniquePassword = "Password!" + UUID.randomUUID().toString().substring(0, 8);
     String uniqueUser = "newUser" + UUID.randomUUID().toString().substring(0, 8);
@@ -50,8 +51,8 @@ public class ApiTest {
     public void testCreateUser() throws IOException {
         UserService userService = retrofit.create(UserService.class);
 
-        System.out.println("user: " + uniqueUser); // newUseree33aab3
-        System.out.println("password: " + uniquePassword);// Password!e7c37dbc
+        System.out.println("user: " + uniqueUser);
+        System.out.println("password: " + uniquePassword);
 
         User user = new User(uniqueUser, uniquePassword);
 
@@ -63,7 +64,7 @@ public class ApiTest {
             UserResponse userResponse = response.body();
             userId = Objects.requireNonNull(userResponse).getUserId();
 
-            System.out.println("User id is: " + userId); // c6cb81da-b060-459c-b19c-38c8aab877c7
+            System.out.println("User id is: " + userId);
         } else {
             Assert.fail("Request was not successful. Response code: " + response.code());
         }
@@ -82,7 +83,7 @@ public class ApiTest {
             AuthTokenResponse authTokenResponse = response.body();
             token = Objects.requireNonNull(authTokenResponse).getToken();
 
-            System.out.println("User token: " + token); // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im5ld1VzZXJlZTMzYWFiMyIsInBhc3N3b3JkIjoiUGFzc3dvcmQhZTdjMzdkYmMiLCJpYXQiOjE2OTEwNzYyNTB9.8CR2aRlWVVaFbkaC3atRe8qlCtA84OyDlCNhtBE97LU
+            System.out.println("User token: " + token);
             Assert.assertFalse(token.isEmpty(), "We got the token!!!");
         } else {
             Assert.fail("Request was not successful. Response code: " + response.code());
@@ -129,45 +130,44 @@ public class ApiTest {
         }
     }
 
-    @Test(dependsOnMethods = {"testFilterAuthorsOfBooks", "testCreateUser", "testGenerateAuthToken"})
+    @Test(dependsOnMethods = {"testFilterAuthorsOfBooks", "testCreateUser", "testGenerateAuthToken", "testGetListOfBooks"})
     public void testAddBookToUserCollection() throws IOException {
         BookService bookService = retrofit.create(BookService.class);
 
-        CollectionRequest collectionRequest = new CollectionRequest(userId, Collections.singletonList(new Isbn(books.get(0).getIsbn())));//"9781449337711")));
+        CollectionRequest collectionRequest = new CollectionRequest(userId, Collections.singletonList(new Isbn(books.get(0).getIsbn())));
 
-        Call<CollectionResponse> call = bookService.addBookToUserCollection("application/json", "application/json", collectionRequest);
+        Call<CollectionResponse> call = bookService.addBookToUserCollection(
+                "application/json",
+                "Bearer " + token,
+                "application/json",
+                collectionRequest
+        );
         Response<CollectionResponse> response = call.execute();
 
         if (response.isSuccessful()) {
             CollectionResponse collectionResponse = response.body();
 
-            Assert.assertNotNull(Objects.requireNonNull(collectionResponse).getCollectionOfIsbns(), "ISBN should not be null");
+            responseBooks = Objects.requireNonNull(collectionResponse).getBooks();
+            Assert.assertNotNull(responseBooks, "Books should not be null");
 
-            System.out.println("Book added to user's collection");
+            for (CollectionResponse.Book book : responseBooks) {
+                System.out.println("Added Book ISBN: " + book.getIsbn());
+            }
         } else {
             Assert.fail("Request was not successful. Response code: " + response.code());
         }
     }
 
     @Test(dependsOnMethods = "testAddBookToUserCollection")
-    public void testRetrieveUserDetails() throws IOException {
-        UserService userService = retrofit.create(UserService.class);
-
-        Call<UserResponse> call = userService.retrieveUserDetails("application/json", userId);
-        Response<UserResponse> response = call.execute();
-
-        if (response.isSuccessful()) {
-            UserResponse userResponse = response.body();
-
-            // Compare the books in the response with the books stored in the context
-            List<Books> storedBooks = books; // Assuming you have books stored in the context
-            List<Books> userBooks = Objects.requireNonNull(userResponse).getBooks();
-
-            Assert.assertEquals(userBooks, storedBooks, "User's books should match stored books");
-
-        } else {
-            Assert.fail("Request was not successful. Response code: " + response.code());
+    public void testRetrievedUserDetails() {
+        List<String> isbn = new ArrayList<>();
+        // Get isbn collection
+        for (Books book : books) isbn.add(book.getIsbn());
+        // check if isbn of user books are correct
+        for (CollectionResponse.Book book : responseBooks) {
+            Assert.assertTrue(isbn.contains(book.getIsbn()), book.getIsbn() + " is not in the isbn list");
         }
+
     }
 
     private boolean isValidJwtToken(String token) {

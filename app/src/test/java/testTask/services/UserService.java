@@ -26,6 +26,7 @@ public interface UserService {
             "accept: application/json"
     })
     Call<UserResponse> retrieveUserDetails(
+            @Header("Authorization") String authorizationHeader,
             @Header("Content-Type") String contentType,
             @Path("userId") String userId
     );

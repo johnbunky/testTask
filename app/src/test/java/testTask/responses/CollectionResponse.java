@@ -3,22 +3,25 @@ package testTask.responses;
 import java.util.List;
 
 public class CollectionResponse {
-    private String userId;
-    private List<String> collectionOfIsbns;
+    private List<Book> books;
 
-    public String getUserId() {
-        return userId;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
-    public List<String> getCollectionOfIsbns() {
-        return collectionOfIsbns;
-    }
+    public static class Book {
+        private String isbn;
 
-    public void setCollectionOfIsbns(List<String> collectionOfIsbns) {
-        this.collectionOfIsbns = collectionOfIsbns;
+        public String getIsbn() {
+            return isbn;
+        }
+
+        public void setIsbn(String isbn) {
+            this.isbn = isbn;
+        }
     }
 }

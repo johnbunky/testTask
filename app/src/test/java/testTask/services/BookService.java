@@ -18,6 +18,7 @@ public interface BookService {
     @POST("/BookStore/v1/Books")
     Call<CollectionResponse> addBookToUserCollection(
             @Header("accept") String accept,
+            @Header("Authorization") String authorizationHeader,
             @Header("Content-Type") String contentType,
             @Body CollectionRequest collectionRequest
     );
